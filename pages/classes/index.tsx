@@ -9,7 +9,7 @@ import { withSession } from "../../utils/utility";
 import { getDatabase } from "../../utils/db";
 import NoClassesFound from "../../components/classes/NoClassesFound";
 
-const classes: React.FC<{ classList: Class[] }> =(props) => {
+const Classes: React.FC<{ classList: Class[] }> =(props) => {
 
   const attendClassHandler = async(classId: string) => {
     try {
@@ -73,11 +73,10 @@ export const getServerSideProps = withSession(async ({req}) => {
   }
   return {
     props: {
-      classList: classListTransformed,
-      user
+      classList: classListTransformed
     }
   };
 });
 
 
-export default classes;
+export default Classes;

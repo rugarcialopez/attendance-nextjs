@@ -8,4 +8,4 @@ describe('Home page', () => {
     const welcomeElement = screen.getByText('Welcome to attendance app!');
     expect(welcomeElement).toBeInTheDocument();
   });
-})
+});

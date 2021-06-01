@@ -86,17 +86,17 @@ const AuthForm: React.FC<{ onLogin: (data: SignUp | SignIn) => void}> = (props) 
       <form onSubmit={submitHandler}>
         { !isLogin && <div className={fullNameClasses}>
           <label htmlFor='fullName'>Your full name</label>
-          <input type='text' id='fullName' onChange={fullNameChangeHandler} value={enteredFullName} onBlur={fullNameBlurHanlder} />
+          <input type='text' id='fullName' onChange={fullNameChangeHandler} value={enteredFullName} onBlur={fullNameBlurHanlder} aria-label='fullName-input'/>
           {fullNameInputHasError && <p className={classes['error-text']}>Please enter a full name.</p>}
         </div>}
         <div className={emailClasses}>
           <label htmlFor='email'>Your Email</label>
-          <input type='email' id='email' onChange={emailChangeHandler} value={enteredEmail} onBlur={emailBlurHanlder}/>
+          <input type='email' id='email' onChange={emailChangeHandler} value={enteredEmail} onBlur={emailBlurHanlder} aria-label='email-input'/>
           {emailInputHasError && <p className={classes['error-text']}>Please enter a valid email address.</p>}
         </div>
         <div className={passwordClasses}>
           <label htmlFor='password'>Your Password</label>
-          <input type='password' id='password' onChange={passwordChangeHandler} value={enteredPassword} onBlur={passwordBlurHanlder}/>
+          <input type='password' id='password' onChange={passwordChangeHandler} value={enteredPassword} onBlur={passwordBlurHanlder} aria-label='password-input'/>
           {passwordInputHasError && <p className={classes['error-text']}>Please enter a valid password (min length 5 characters)</p>}
         </div>
         { !isLogin && <div className={classes.control}>

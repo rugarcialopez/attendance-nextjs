@@ -2,11 +2,16 @@ import { useEffect } from 'react';
 import Router from 'next/router';
 import useSWR from 'swr';
 
+const getData = async () => {
+  const response = await fetch('/api/user');
+  return await response.json();
+};
+
 const useUser = ({
   redirectTo = '',
   redirectIfFound = false,
 } = {}) => {
-  const { data: user, mutate: mutateUser } = useSWR('/api/user');
+  const { data: user, mutate: mutateUser } = useSWR('/api/user', getData);
   useEffect(() => {
     // if no redirect needed, just return (example: already on /classes)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet

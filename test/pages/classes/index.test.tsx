@@ -1,17 +1,18 @@
-import { waitFor, render, screen } from '@testing-library/react';
+import { waitFor, render, screen } from '../../test-utils';
 import userEvent from '@testing-library/user-event';
 import Classes from '../../../pages/classes';
+
 describe('Classes page', () => {
   test('renders No classes found! as a text when there are no classes', () => {
     const classes = [];
-    render(<Classes classList={classes}/>);
+    render(<Classes classList={classes}/>,{});
     const noClassesElement = screen.getByText('No classes found!');
     expect(noClassesElement).toBeInTheDocument();
   });
 
   test('renders Add a Class link when there are no classes', () => {
     const classes = [];
-    render(<Classes classList={classes}/>);
+    render(<Classes classList={classes}/>, {});
     const addClasslement = screen.getByText('Add a Class');
     expect(addClasslement).toBeInTheDocument();
   });
@@ -33,7 +34,7 @@ describe('Classes page', () => {
         attendanceState: ''
       } 
   ];
-    render(<Classes classList={classes}/>);
+    render(<Classes classList={classes}/>, {});
     const englishSubjectElement = screen.getByText('English');
     expect(englishSubjectElement).toBeInTheDocument();
     const scienceSubjectElement = screen.getByText('Science');
@@ -57,7 +58,7 @@ describe('Classes page', () => {
         attendanceState: ''
       } 
   ];
-    render(<Classes classList={classes}/>);
+    render(<Classes classList={classes}/>, null);
     const englishStartDateElement = screen.getByText('Wed May 05 2021', { exact: false });
     expect(englishStartDateElement).toBeInTheDocument();
     const englishEndDateElement = screen.getByText('Tue May 25 2021', { exact: false });
@@ -69,21 +70,15 @@ describe('Classes page', () => {
   });
 
   describe('Students', () => {
-
-    beforeAll(() => {
-      window.fetch = jest
-        .fn()
-        .mockResolvedValueOnce({
-          json: async () => { return  { isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student' } }
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: async () => { return  { message: 'success' } }
-        });
-
+    beforeEach(() => {
+      fetchMock.resetMocks();
+    });
+    afterEach(() => {
+      fetchMock.mockClear();
     });
 
     test('renders attend button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student'}));
       const classes = [
         {
           id: '60b4b2952d77d67c70e47f11',
@@ -93,13 +88,15 @@ describe('Classes page', () => {
           attendanceState: ''
         }
       ];
-      render(<Classes classList={classes}/>);
+      render(<Classes classList={classes}/>, {});
       await waitFor(() => {
         expect(screen.getByText('Attended')).toBeInTheDocument();
       });
     });
 
     test('renders disabled attend button if student click on attend button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student'}));
+      fetchMock.mockResponseOnce(JSON.stringify({message: 'success'}));
       const classes = [
         {
           id: '60b4b2952d77d67c70e47f11',
@@ -109,7 +106,7 @@ describe('Classes page', () => {
           attendanceState: ''
         }
       ];
-      render(<Classes classList={classes} />);
+      render(<Classes classList={classes}/>, {});
       await waitFor(() => {
         expect(screen.getByText('Attended')).toBeInTheDocument();
       });
@@ -120,6 +117,7 @@ describe('Classes page', () => {
     });
 
     test('renders disabled attend button when student has attended the course', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student'}));
       const classes = [
         {
           id: '60b4b2952d77d67c70e47f11',
@@ -129,13 +127,14 @@ describe('Classes page', () => {
           attendanceState: 'Pending approve'
         }
       ];
-      render(<Classes classList={classes}/>);
+      render(<Classes classList={classes}/>, {});
       await waitFor(() => {
         expect(screen.getByText('Attended')).toBeDisabled();
       });
     });
 
     test('does not render edit button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student'}));
       const classes = [
         {
           id: '60b4b2952d77d67c70e47f11',
@@ -145,7 +144,7 @@ describe('Classes page', () => {
           attendanceState: 'Pending approve'
         }
       ];
-      render(<Classes classList={classes}/>);
+      render(<Classes classList={classes}/>, {});
       await waitFor(() => {
         expect(screen.getByText('Attended')).toBeDisabled();
       });
@@ -153,6 +152,7 @@ describe('Classes page', () => {
     });
 
     test('does not render approve/reject button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'student'}));
       const classes = [
         {
           id: '60b4b2952d77d67c70e47f11',
@@ -162,11 +162,119 @@ describe('Classes page', () => {
           attendanceState: 'Pending approve'
         }
       ];
-      render(<Classes classList={classes}/>);
+      render(<Classes classList={classes}/>, {});
       await waitFor(() => {
         expect(screen.getByText('Attended')).toBeDisabled();
       });
       expect(screen.queryByText('Approve/Reject')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Teachers', () => {
+    beforeEach(() => {
+      fetchMock.resetMocks();
+    });
+    afterEach(() => {
+      fetchMock.mockClear();
+    });
+    
+
+    test('renders edit button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'teacher'}));
+      const classes = [
+        {
+          id: '60b4b2952d77d67c70e47f11',
+          subject: 'English',
+          startDate: 'Wed May 05 2021',
+          endDate: 'Tue May 25 2021',
+          attendanceState: ''
+        }
+      ];
+      render(<Classes classList={classes}/>, {});
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument();
+      });
+    });
+
+    test('does not render attend button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'teacher'}));
+      const classes = [
+        {
+          id: '60b4b2952d77d67c70e47f11',
+          subject: 'English',
+          startDate: 'Wed May 05 2021',
+          endDate: 'Tue May 25 2021',
+          attendanceState: '',
+        }
+      ];
+      render(<Classes classList={classes}/>, {});
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument();
+      });
+      expect(screen.queryByText('Attended')).not.toBeInTheDocument();
+    });
+
+    test('does not render approve/reject button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'teacher'}));
+      const classes = [
+        {
+          id: '60b4b2952d77d67c70e47f11',
+          subject: 'English',
+          startDate: 'Wed May 05 2021',
+          endDate: 'Tue May 25 2021',
+          attendanceState: ''
+        }
+      ];
+      render(<Classes classList={classes}/>, {});
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument();
+      });
+      expect(screen.queryByText('Approve/Reject')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Admin', () => {
+    beforeEach(() => {
+      fetchMock.resetMocks();
+    });
+    afterEach(() => {
+      fetchMock.mockClear();
+    });
+    
+
+    test('renders edit button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'admin'}));
+      const classes = [
+        {
+          id: '60b4b2952d77d67c70e47f11',
+          subject: 'English',
+          startDate: 'Wed May 05 2021',
+          endDate: 'Tue May 25 2021',
+          attendanceState: ''
+        }
+      ];
+      render(<Classes classList={classes}/>, {});
+      await waitFor(() => {
+        expect(screen.getByText('Edit')).toBeInTheDocument();
+      });
+    });
+
+
+    test('render approve/reject button', async () => {
+      fetchMock.mockResponseOnce(JSON.stringify({isLoggedIn: true, id: '60af9d9201351e3bee93f95a', fullName: 'learner one', role: 'admin'}));
+      const classes = [
+        {
+          id: '60b4b2952d77d67c70e47f11',
+          subject: 'English',
+          startDate: 'Wed May 05 2021',
+          endDate: 'Tue May 25 2021',
+          attendanceState: ''
+        }
+      ];
+      render(<Classes classList={classes}/>, {});
+      await waitFor(() => {
+        expect(screen.getByText('Approve/Reject')).toBeInTheDocument();
+      });
     });
   });
 

@@ -4,7 +4,8 @@ import useSWR from 'swr';
 
 const getData = async () => {
   const response = await fetch('/api/user');
-  return await response.json();
+  const data = await response.json();
+  return data;
 };
 
 const useUser = ({

@@ -55,17 +55,17 @@ const NewClassForm: React.FC<{ onAddClass: (classData: NewClass) => void }> = (p
     <form onSubmit={submitHandler}>
       <div className={subjectClasses}>
         <label htmlFor='subject'>Subject</label>
-        <input type='text' id='subject' onChange={subjectChangeHandler} value={enteredSubject} onBlur={subjectBlurHanlder} />
+        <input type='text' id='subject' onChange={subjectChangeHandler} value={enteredSubject} onBlur={subjectBlurHanlder} aria-label='subject-input'/>
         { subjectInputHasError && <p className={classes['error-text']}>Please enter a subject.</p> }
       </div>
       <div className={startDateClasses}>
         <label htmlFor='startDate'>Start date</label>
-        <input type='date' id='start-date' onChange={startDateChangeHandler} value={enteredStartDate} onBlur={startDateBlurHanlder} />
+        <input type='date' id='start-date' onChange={startDateChangeHandler} value={enteredStartDate} onBlur={startDateBlurHanlder} aria-label='startDate-input'/>
         { startDateInputHasError && <p className={classes['error-text']}>Please enter a valid start date.</p>}
       </div>
       <div className={endDateClasses}>
         <label htmlFor='endDate'>End date</label>
-        <input type='date' id='end-date' onChange={endDateChangeHandler} value={enteredEndDate} onBlur={endDateBlurHanlder} />
+        <input type='date' id='end-date' onChange={endDateChangeHandler} value={enteredEndDate} onBlur={endDateBlurHanlder} aria-label='endDate-input'/>
         { endDateInputHasError && <p className={classes['error-text']}>Please enter a valid end date.</p>}
       </div>
       <div className={classes.actions}>

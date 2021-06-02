@@ -1,4 +1,3 @@
-import userEvent from '@testing-library/user-event';
 import { render, screen, fireEvent } from '@testing-library/react';
 import NewClassForm from '../../../components/classes/NewClassForm';
 
